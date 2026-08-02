@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         email,
         amount, // amount in kobo — client already multiplies by 100
         currency: currency || "NGN",
-        callback_url: "https://YOUR-APP-DOMAIN/index.html" // TODO: set your real hosted URL
+        callback_url: "https://wyte-vault.vercel.app/index.html" // TODO: set your real hosted URL
       })
     });
 
