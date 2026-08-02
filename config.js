@@ -33,7 +33,7 @@ window.WYTE_CONFIG = {
   // server-side as the PAYSTACK_SECRET_KEY env var on Vercel. This app only
   // calls your own serverless endpoint, which calls Paystack for you.
   // See /api/paystack-initialize.js for the matching server function.
-  PAYSTACK_INIT_URL: "https://labguru-five.vercel.app/api/verify-payments",
+  PAYSTACK_INIT_URL: "https://labguru-five.vercel.app/api/verify-payment",
 
   // Fill in once you create a OneSignal app and wrap this PWA with Median.co.
   // Until then, notifications only work as in-browser Web Notifications
