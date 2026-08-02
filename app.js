@@ -986,7 +986,7 @@
 
   /* ---------------- Ad interstitial (self-hosted cross-promo) ---------------- */
   const AD_URL = "https://wynote.vercel.app";
-  const AD_SKIP_SECONDS = 8; // matches the promo clip length; capped at 10s either way
+  const AD_SKIP_SECONDS = 10; // "10s or less" cap — clip itself is 11.4s, skip unlocks at 10
 
   function showAd() {
     if (settings.plan === "pro") return; // Pro removes ads entirely
