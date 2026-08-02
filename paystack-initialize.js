@@ -7,6 +7,19 @@
 // authorization_url the browser should redirect to.
 
 export default async function handler(req, res) {
+  // Required because the app (wyte-vault.vercel.app) and this function
+  // (labguru-five.vercel.app) are on different domains — without these
+  // headers the browser blocks the response as a cross-origin request,
+  // even though the server call itself succeeds. If you ever move both
+  // onto the same Vercel project/domain, this becomes unnecessary.
+  res.setHeader("Access-Control-Allow-Origin", "https://wyte-vault.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
   }
@@ -28,7 +41,7 @@ export default async function handler(req, res) {
         email,
         amount, // amount in kobo — client already multiplies by 100
         currency: currency || "NGN",
-        callback_url: "https://wyte-vault.vercel.app/index.html" // TODO: set your real hosted URL
+        callback_url: "https://YOUR-APP-DOMAIN/index.html" // TODO: set your real hosted URL
       })
     });
 

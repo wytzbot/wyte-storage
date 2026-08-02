@@ -754,6 +754,15 @@
       alert("Notifications are blocked. Enable them for this site in your browser settings, then come back.");
       return;
     }
+    if (window.WyteOneSignal && window.WyteOneSignal.isConfigured()) {
+      // Goes through OneSignal so the browser also gets subscribed for real
+      // web push, not just local permission.
+      window.WyteOneSignal.requestPermission().then(() => {
+        updateNotifPermissionStatus();
+        checkAndSendDueReminders();
+      });
+      return;
+    }
     Notification.requestPermission().then(() => {
       updateNotifPermissionStatus();
       checkAndSendDueReminders();
@@ -994,12 +1003,29 @@
     const closeBtn = document.getElementById("ad-close-btn");
     const countEl = document.getElementById("ad-close-count");
     const fill = document.getElementById("ad-progress-fill");
+    const wrap = document.querySelector(".ad-video-wrap");
 
     closeBtn.disabled = true;
     closeBtn.classList.remove("is-ready");
     video.currentTime = 0;
     video.muted = true;
     fill.style.width = "0%";
+    const existingFallback = wrap.querySelector(".ad-fallback");
+    if (existingFallback) existingFallback.remove();
+
+    video.onerror = () => {
+      const code = video.error ? video.error.code : "unknown";
+      const codeNames = { 1: "MEDIA_ERR_ABORTED", 2: "MEDIA_ERR_NETWORK", 3: "MEDIA_ERR_DECODE", 4: "MEDIA_ERR_SRC_NOT_SUPPORTED" };
+      console.warn("WYTE ad video failed to load:", codeNames[code] || code, "— check assets/ads/wynote-promo.mp4 is deployed and playable at that URL.");
+      // Don't trap the user behind a locked countdown for a video that can't play.
+      clearInterval(tick);
+      closeBtn.disabled = false;
+      closeBtn.classList.add("is-ready");
+      const fallback = document.createElement("div");
+      fallback.className = "ad-fallback";
+      fallback.textContent = "Wynote";
+      wrap.appendChild(fallback);
+    };
 
     let remaining = AD_SKIP_SECONDS;
     countEl.textContent = remaining;
@@ -1135,6 +1161,7 @@
   saveItems();
   applyAppearance();
   applyPricingConfig();
+  if (window.WyteOneSignal) window.WyteOneSignal.init();
   renderHome();
   setupExitAdHook();
   if (settings.onboardingComplete) {
