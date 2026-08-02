@@ -27,13 +27,13 @@ window.WYTE_CONFIG = {
 
   // Where your payment provider should POST subscription/payment events.
   // Verify signatures server-side before trusting any event from this URL.
-  PAYMENT_WEBHOOK_URL: "https://labguru-five.vercel.app/payments-webhook",
+  PAYMENT_WEBHOOK_URL: "https://labguru-five.vercel.app/paystack-webhook",
 
   // Paystack: the SECRET key must never live in this client file — it stays
   // server-side as the PAYSTACK_SECRET_KEY env var on Vercel. This app only
   // calls your own serverless endpoint, which calls Paystack for you.
   // See /api/paystack-initialize.js for the matching server function.
-  PAYSTACK_INIT_URL: "https://labguru-five.vercel.app/api/paystack-initialize",
+  PAYSTACK_INIT_URL: "https://labguru-five.vercel.app/api/verify-payments",
 
   // Fill in once you create a OneSignal app and wrap this PWA with Median.co.
   // Until then, notifications only work as in-browser Web Notifications
